@@ -1,0 +1,1 @@
+This code is written with bad techniques. 

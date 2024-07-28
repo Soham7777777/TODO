@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+
+{% import 'macro/modal.html' as modal %}
+
+{% block RenderBody %}
+<div class="container-lg text-center mt-3">
+    <p class="fs-1 fw-bold">Todo Application</p>
+    <hr>
+
+    <div id="todos" class="d-flex flex-row flex-wrap justify-content-evenly gap-4">
+        {% for todo, edit_form_ui, edit_todo_modal in ZIP_todos__edit_form_ui_arr__edit_todo_modal_arr %}
+            {% include 'partial/todo.html' %}
+        {% endfor %}
+    </div>
+
+
+
+</div>
+
+
+<div class="fixed-bottom d-flex justify-content-end mb-5 mx-5">
+    <button class="col-12 col-md-auto btn btn-success btn-lg fw-bolder" data-bs-toggle="modal"
+        data-bs-target="#{{ create_todo_modal.element_id }}">Create</button>
+</div>
+
+{{ modal.ModalFormComponent(modal_data=create_todo_modal, form_ui=create_form_ui) }}
+{% endblock %}

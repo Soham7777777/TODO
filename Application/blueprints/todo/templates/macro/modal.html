@@ -1,0 +1,21 @@
+{% import 'macro/form.html' as form %}
+
+{% macro ModalFormComponent(modal_data, form_ui) %}
+<div class="modal fade" id="{{ modal_data.element_id }}" data-bs-backdrop="static" data-bs-keyboard="false"
+    tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-4 fw-bolder" id="exampleModalLabel">{{ modal_data.header }}</h1>
+                <button type="button" id="cancleModal" class="btn-close" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+
+
+            {{ form.FormComponent(form_ui=form_ui) }}
+
+
+        </div>
+    </div>
+</div>
+{% endmacro %}

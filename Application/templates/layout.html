@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TODO</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='./bootstrap-5.3.3-dist/css/bootstrap.css') }}">
+  <link rel="stylesheet"
+    href="{{ url_for('static', filename='./bootstrap-icons-1.11.3/font/bootstrap-icons.min.css') }}">
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='./favicon.svg') }}">
+  <style>
+    .htmx-indicator {
+      display: none;
+    }
+
+    .htmx-request .htmx-indicator {
+      display: block;
+    }
+
+
+    .hide-when-requesting {
+      display: block;
+    }
+
+    .htmx-request .hide-when-requesting {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+
+  {% block RenderBody required %}
+  {% endblock %}
+
+  <div id="toaster" class="toast-container ms-4 mb-4 position-fixed bottom-0 start-0">
+
+    <div id="connErrorMessage" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header d-flex justify-content-between">
+        <div class="text-danger d-flex justify-content-between gap-3">
+          <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="currentColor"
+            class="bi bi-exclamation-circle-fill" viewBox="0 0 16 16">
+            <path
+              d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4m.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2" />
+          </svg>
+          <div class="me-auto fw-bolder">Connection Error</div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body">
+        Check your internet connection.
+      </div>
+    </div>
+
+  </div>
+
+
+  <script src="{{ url_for('static', filename='htmx.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='./bootstrap-5.3.3-dist/js/bootstrap.bundle.js') }}"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", (event) => {
+      document.body.addEventListener('htmx:beforeSwap', function (evt) {
+        if (evt.detail.xhr.status === 422) {
+          evt.detail.shouldSwap = true;
+          evt.detail.isError = false;
+        }
+      })
+
+      document.body.addEventListener("resetFormsAndCloseModal", function (evt) {
+        if (evt.detail.form_id !== undefined) {
+          document.getElementById(evt.detail.form_id).reset()
+        }
+        bootstrap.Modal.getInstance('#' + evt.detail.modal_id).hide()
+      })
+
+      document.body.addEventListener("Toastify", function (evt) {
+        let toastId = evt.detail.value
+        let elem = document.getElementById(toastId)
+        bootstrap.Toast.getOrCreateInstance('#' + toastId).show()
+        elem.addEventListener('hidden.bs.toast', () => {
+          elem.remove();
+        });
+      })
+
+      htmx.on('htmx:sendError', function (evt) {
+        const toastBootstrap = bootstrap.Toast.getOrCreateInstance('#connErrorMessage')
+        toastBootstrap.show()
+      })
+    })
+  </script>
+</body>
+
+</html>

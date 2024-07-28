@@ -1,0 +1,80 @@
+{% macro FormComponent(form_ui) %}
+{% set form = form_ui.form %}
+<form enctype="multipart/form-data" method="post" id="{{ form_ui.element_id }}"
+    hx-post="{{ form_ui.hx_post }}" hx-swap="{{ form_ui.hx_swap }}" hx-target="{{ form_ui.hx_target }}"
+    hx-indicator='#{{ form_ui.element_id ~ "Indicator" }}' hx-disabled-elt='#{{ form_ui.element_id ~ "Submit" }}'>
+    <div class="modal-body text-start">
+        {{ form.csrf_token }}
+        <div class="mb-3">
+            {{ form.title.label(class="form-label fw-bold") }}
+
+            {% if form.title.data == '' %}
+            {{ form.title(class="form-control")}}
+            {% else %}
+            {{ form.title(class="form-control", value=form.title.data) }}
+            {% endif %}
+
+            {% if "title" in form.errors %}
+            <div id="titleHelpBlock{{ form_ui.element_id }}" class="form-text text-danger">
+                {{ form.errors["title"][0] }}
+            </div>
+            {% else %}
+            <div id="titleHelpBlock{{ form_ui.element_id }}" class="form-text">
+                Title must be within 24 characters.
+            </div>
+            {% endif %}
+
+        </div>
+        <div class="mb-3">
+            {{ form.description.label(class="form-label fw-bold") }}
+            {% if form.description.data == '' %}
+            {{ form.description(class="form-control", rows="3") }}
+            {% else %}
+            {{ form.description(class="form-control", rows="3", value=form.description.data) }}
+            {% endif %}
+
+            {% if "description" in form.errors %}
+            <div id="descriptionHelpBlock{{ form_ui.element_id }}" class="form-text text-danger">
+                {{ form.errors["description"][0] }}
+            </div>
+            {% else %}
+            <div id="descriptionHelpBlock{{ form_ui.element_id }}" class="form-text">
+                Description must be within 512 characters.
+            </div>
+            {% endif %}
+
+        </div>
+        <div class="mb-3">
+            {{ form.image.label(class="form-label") }}
+            {{ form.image(class="form-control", rows="3") }}
+
+            {% if "image" in form.errors %}
+            <div id="imageHelpBlock{{ form_ui.element_id }}" class="form-text text-danger">
+                {{ form.errors["image"][0] }}
+            </div>
+            {% else %}
+            <div id="imageHelpBlock{{ form_ui.element_id }}" class="form-text">
+                Only jpg, jpe, jpeg, png, gif, svg, bmp, and webp files are allowed and size must be within 500kb.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="modal-footer d-flex justify-content-between justify-content-md-end">
+        <button type="reset" class="btn btn-secondary">Reset</button>
+        <button id='{{ form_ui.element_id ~ "Submit" }}' type="submit" class="btn btn-primary">
+
+            <div id='{{ form_ui.element_id ~ "Indicator" }}'>
+                <span class="hide-when-requesting">
+                    {{ form_ui.submit_button_text }}
+                </span>
+                <div class="htmx-indicator">
+                    <span class="spinner-border spinner-border-sm" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </span>
+                </div>
+            </div>
+
+        </button>
+    </div>
+</form>
+{% endmacro %}

@@ -1,0 +1,32 @@
+{% import 'macro/modal.html' as modal %}
+
+<div id="todo{{ todo.id }}" class="card p-0" style="width: 18rem;">
+    {% if not todo.imagename %}
+    <img src="{{ url_for('TODO.static', filename='default.jpg' ) }}" class="card-img-top img-fluid" alt="...">
+    {% else %}
+    <img src="{{ url_for('TODO.static',filename='TodoImages' ) ~ '/' ~ todo.imagename }}"
+        class="card-img-top img-fluid" alt="...">
+    {% endif %}
+    <div class="card-body text-start d-flex flex-column justify-content-between">
+        <h5 id="title{{ todo.id }}" class="card-title text-truncate">{{ todo.title }}</h5>
+        <p id="description{{ todo.id }}" class="card-text overflow-auto" style="max-height:4.5em;">{{ todo.description }}</p>
+
+        <div class="d-flex justify-content-between">
+            <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#{{ edit_todo_modal.element_id }}"><i class="bi bi-pencil"></i></button>
+            <button type="button" class="col-offset-2 btn btn-danger" hx-delete="{{ url_for('TODO.deleteOne', element_id=todo.id) }}" hx-target="#todo{{ todo.id }}"
+                hx-swap="outerHTML" hx-disabled-elt="this" hx-indicator="#DeleteIndicator{{ todo.id }}">
+
+                <div id="DeleteIndicator{{ todo.id }}">
+                    <i class="hide-when-requesting bi bi-trash"></i>
+                    <div class="htmx-indicator">
+                        <span class="spinner-border spinner-border-sm" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </span>
+                    </div>
+                </div>
+            </button>
+        </div>
+    </div>
+    {{ modal.ModalFormComponent(modal_data=edit_todo_modal, form_ui=edit_form_ui) }}
+</div>
+

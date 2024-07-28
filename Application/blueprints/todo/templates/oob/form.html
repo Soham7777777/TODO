@@ -1,0 +1,4 @@
+{% import 'macro/form.html' as form %}
+<form id="{{ oob_id }}" hx-swap-oob="innerHTML">
+    {{ form.FormComponent(form_ui=form_ui) }}
+</form>
